@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Bookstore.Application.ViewModel;
-using Bookstore.Domain.Entities;
+using Bookstore.Application.ViewModel.Book;
 
 namespace Bookstore.Application.Interfaces
 {
@@ -11,8 +6,8 @@ namespace Bookstore.Application.Interfaces
     {
         Task<IEnumerable<BookResponseViewModel>> GetAllBooks();
         Task<BookResponseViewModel> GetBookByName(string name);
-        Task<BookResponseViewModel> CreateBook(Book newBook);
-        Task<Book> UpdateBook(Book newBook);
-        void DeleteBook(Book newBook);
+        Task<BookResponseViewModel> CreateBook(BookResponseViewModel newBook);
+        Task<BookResponseViewModel> UpdateBook(BookResponseViewModel newBook, int id);
+        string DeleteBook(int id);
     }
 }

@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
@@ -12,6 +12,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookstore.Infra.Data", "Bookstore.Infra.Data\Bookstore.Infra.Data.csproj", "{105A49EE-2155-43D5-8940-C039A3A82040}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Bookstore.Infra.IoC", "Bookstore.Infra.IoC\Bookstore.Infra.IoC.csproj", "{67FF8A2B-A9F4-4C00-A813-D3CD48BDA64D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "01 - API", "01 - API", "{43350C79-BCA2-43F9-A321-C5895CF62732}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

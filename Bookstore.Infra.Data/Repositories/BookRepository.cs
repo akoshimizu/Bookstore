@@ -4,42 +4,68 @@ using System.Linq;
 using System.Threading.Tasks;
 using Bookstore.Domain.Entities;
 using Bookstore.Domain.Interfaces;
+using Bookstore.Infra.Data.Context;
+using Microsoft.EntityFrameworkCore;
 
 namespace Bookstore.Infra.Data.Repositories
 {
     public class BookRepository : IBookRepository
     {
+        private readonly BookstoreDbContext _context;
+        public BookRepository(BookstoreDbContext context)
+        {
+            _context = context;
+        }
+
         public async Task<IEnumerable<Book>> GetAllBooks()
         {
-            var books = new List<Book>()
-            {
-                new Book("1", "Livro 1", "Descrição Livro 1", 19.99m),
-                new Book("2", "Livro 2", "Descrição Livro 2", 59.99m),
-                new Book("3", "Livro 3", "Descrição Livro 3", 29.99m)
-            };
-
-            return books;
+            var booksContext = await _context.Books.ToListAsync();
+            return booksContext;
         }
 
         public async Task<Book> GetBookByName(string name)
         {
-            var book = new Book("1", name, "Descrição Livro 1", 19.99m);
+            var book = await _context.Books.FirstOrDefaultAsync(n => n.Name.Equals(name));
             return book;
         }
 
-        public Task<Book> CreateBook(Book newBook)
+        public async Task<Book> CreateBook(Book newBook)
         {
-            throw new NotImplementedException();
+            try
+            {
+                await _context.Books.AddAsync(newBook);
+                await _context.SaveChangesAsync();
+                return newBook;
+            }
+            catch (System.Exception ex)
+            {
+                throw new Exception($"Erro ao criar Livro: {ex.Message}");
+            }
         }
 
-        public Task<Book> UpdateBook(Book newBook)
+        public async Task<Book> UpdateBook(Book model, int id)
         {
-            throw new NotImplementedException();
+            var book = await _context.Books.FirstOrDefaultAsync(b => b.Id == id);
+            if(book is null) return null;
+
+            book.Name = model.Name;
+            book.Description = model.Description;
+            book.Price = model.Price;
+
+            _context.Update(book);
+            await _context.SaveChangesAsync();
+
+            return book;
         }
 
-        public void DeleteBook(Book newBook)
+        public string DeleteBook(int id)
         {
-            throw new NotImplementedException();
+            var deletedBook = _context.Books.FirstOrDefault(x => x.Id.Equals(id));
+            if(deletedBook is null) return "Livro não encontrado.";
+            
+            _context.Books.Remove(deletedBook); //VERIFICAR
+            _context.SaveChanges();
+            return $"Livro deletado: {deletedBook.Name}";
         }
     }
 }

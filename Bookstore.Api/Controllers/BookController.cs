@@ -1,9 +1,5 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Bookstore.Application.Interfaces;
-using Bookstore.Application.ViewModel;
+using Bookstore.Application.ViewModel.Book;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bookstore.Api.Controllers
@@ -25,10 +21,33 @@ namespace Bookstore.Api.Controllers
         }
 
         [HttpGet("v1/books/{name}")]
-        public async Task<ActionResult> GetBookByName(string name)
+        public async Task<ActionResult> GetBookByName([FromRoute]string name)
         {
             var book = await _bookService.GetBookByName(name);
             return Ok(book);
+        }
+
+        [HttpPost("v1/books")]
+        public async Task<ActionResult> CreateBook([FromBody]BookResponseViewModel book)
+        {
+            var bookCreated = await _bookService.CreateBook(book);
+            return Ok(bookCreated);
+        }
+
+        [HttpPut("v1/books/{id:int}")]
+        public async Task<ActionResult> UpdateBook([FromBody]BookResponseViewModel model, [FromRoute]int id)
+        {
+            var Updatedbook = await _bookService.UpdateBook(model, id);
+            if(Updatedbook is null) return StatusCode(204, "Livro não encontrado");
+
+            return Ok(Updatedbook);
+        }
+
+        [HttpDelete("v1/books/{id:int}")]
+        public ActionResult DeleteBook([FromRoute]int id)
+        {
+            var result = _bookService.DeleteBook(id);
+            return Ok(result);
         }
     }
 }

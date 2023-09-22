@@ -1,5 +1,6 @@
+using AutoMapper;
 using Bookstore.Application.Interfaces;
-using Bookstore.Application.ViewModel;
+using Bookstore.Application.ViewModel.Book;
 using Bookstore.Domain.Entities;
 using Bookstore.Domain.Interfaces;
 
@@ -7,45 +8,56 @@ namespace Bookstore.Application.Services
 {
     public class BookService : IBookService
     {
+        private readonly IMapper _mapper;
         private readonly IBookRepository _bookRepository;
-        public BookService(IBookRepository bookRepository)
+        public BookService(IMapper mapper, IBookRepository bookRepository)
         {
             _bookRepository = bookRepository;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<BookResponseViewModel>> GetAllBooks()
         {
             var listBooks = await _bookRepository.GetAllBooks();
-            var books = new List<BookResponseViewModel>();
+            if(listBooks is null) return null;
+            
+            var books = _mapper.Map<IEnumerable<BookResponseViewModel>>(listBooks);
+            // var books = new List<BookResponseViewModel>();
 
-            foreach (var item in listBooks)
-            {
-                books.Add(new BookResponseViewModel(item.Name, item.Description, item.Price));
-            }
+            // foreach (var item in listBooks)
+            // {
+            //     books.Add(new BookResponseViewModel(item.Name, item.Description, item.Price));
+            // }
 
             return books;
         }
 
         public async Task<BookResponseViewModel> GetBookByName(string name)
         {
-            var book = await _bookRepository.GetBookByName(name);
-            var bookResp = new BookResponseViewModel(book.Name, book.Description, book.Price);
-            return bookResp;
+            return _mapper.Map<BookResponseViewModel>(await _bookRepository.GetBookByName(name));
+            // var bookResp = _mapper.Map<BookResponseViewModel>(book);
+            // return book;
         }
 
-        public Task<BookResponseViewModel> CreateBook(Book newBook)
+        public async Task<BookResponseViewModel> CreateBook(BookResponseViewModel model)
         {
-            throw new NotImplementedException();
+            // var newBook = new Book(model.Name, model.Description, model.Price);
+            var book = await _bookRepository.CreateBook( _mapper.Map<Book>(model));
+            // var bookCreated = new BookResponseViewModel(book.Name, book.Description, book.Price);
+            
+            return _mapper.Map<BookResponseViewModel>(book);
         }
 
-        public Task<Book> UpdateBook(Book newBook)
+        public async Task<BookResponseViewModel> UpdateBook(BookResponseViewModel model, int id)
         {
-            throw new NotImplementedException();
+            var Updatedbook = _mapper.Map<Book>(model);
+            Updatedbook = await _bookRepository.UpdateBook(Updatedbook, id);
+            return _mapper.Map<BookResponseViewModel>(Updatedbook);
         }
 
-        public void DeleteBook(Book newBook)
+        public string DeleteBook(int id)
         {
-            throw new NotImplementedException();
+            return _bookRepository.DeleteBook(id);
         }
     }
 }
