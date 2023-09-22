@@ -1,49 +1,51 @@
+using System.Reflection.Metadata.Ecma335;
 using AutoMapper;
 using Bookstore.Application.Interfaces;
 using Bookstore.Application.ViewModel.Book;
 using Bookstore.Domain.Entities;
 using Bookstore.Domain.Interfaces;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace Bookstore.Application.Services
 {
     public class BookService : IBookService
     {
+        private IMemoryCache _cache;
         private readonly IMapper _mapper;
         private readonly IBookRepository _bookRepository;
-        public BookService(IMapper mapper, IBookRepository bookRepository)
+        public BookService(IMemoryCache cache, IMapper mapper, IBookRepository bookRepository)
         {
-            _bookRepository = bookRepository;
+            _cache = cache;
             _mapper = mapper;
+            _bookRepository = bookRepository;
         }
 
         public async Task<IEnumerable<BookResponseViewModel>> GetAllBooks()
         {
-            var listBooks = await _bookRepository.GetAllBooks();
-            if(listBooks is null) return null;
-            
-            var books = _mapper.Map<IEnumerable<BookResponseViewModel>>(listBooks);
-            // var books = new List<BookResponseViewModel>();
-
-            // foreach (var item in listBooks)
-            // {
-            //     books.Add(new BookResponseViewModel(item.Name, item.Description, item.Price));
-            // }
-
-            return books;
+            try
+            {
+                var allBooks = await _cache.GetOrCreateAsync("GetBooks", entry =>
+                {
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
+                    return GetFirstTimeBooks();
+                });
+                
+                return allBooks;
+            }
+            catch (System.Exception)
+            {
+                throw;
+            }
         }
 
-        public async Task<BookResponseViewModel> GetBookByName(string name)
+        public async Task<BookResponseViewModel> GetBookByName(string bookName)
         {
-            return _mapper.Map<BookResponseViewModel>(await _bookRepository.GetBookByName(name));
-            // var bookResp = _mapper.Map<BookResponseViewModel>(book);
-            // return book;
+            return _mapper.Map<BookResponseViewModel>(await _bookRepository.GetBookByName(bookName));
         }
 
         public async Task<BookResponseViewModel> CreateBook(BookResponseViewModel model)
         {
-            // var newBook = new Book(model.Name, model.Description, model.Price);
             var book = await _bookRepository.CreateBook( _mapper.Map<Book>(model));
-            // var bookCreated = new BookResponseViewModel(book.Name, book.Description, book.Price);
             
             return _mapper.Map<BookResponseViewModel>(book);
         }
@@ -58,6 +60,16 @@ namespace Bookstore.Application.Services
         public string DeleteBook(int id)
         {
             return _bookRepository.DeleteBook(id);
+        }
+
+        private async Task<IEnumerable<BookResponseViewModel>> GetFirstTimeBooks()
+        {
+            var listBooks = await _bookRepository.GetAllBooks();
+            if(listBooks is null) return null;
+            
+            var books = _mapper.Map<IEnumerable<BookResponseViewModel>>(listBooks);
+
+            return books;
         }
     }
 }
