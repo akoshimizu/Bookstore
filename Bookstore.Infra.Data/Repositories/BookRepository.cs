@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Bookstore.Domain.Entities;
 using Bookstore.Domain.Interfaces;
 using Bookstore.Infra.Data.Context;
@@ -39,7 +35,7 @@ namespace Bookstore.Infra.Data.Repositories
             }
             catch (System.Exception ex)
             {
-                throw new Exception($"Erro ao criar Livro: {ex.Message}");
+                throw new Exception($"Error creating book: {ex.Message}");
             }
         }
 
@@ -61,11 +57,11 @@ namespace Bookstore.Infra.Data.Repositories
         public string DeleteBook(int id)
         {
             var deletedBook = _context.Books.FirstOrDefault(x => x.Id.Equals(id));
-            if(deletedBook is null) return "Livro não encontrado.";
+            if(deletedBook is null) return null;
             
-            _context.Books.Remove(deletedBook); //VERIFICAR
+            _context.Books.Remove(deletedBook); //VERIFY
             _context.SaveChanges();
-            return $"Livro deletado: {deletedBook.Name}";
+            return $"Deleted book: {deletedBook.Name}";
         }
     }
 }

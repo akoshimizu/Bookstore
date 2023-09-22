@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Bookstore.Domain.Entities;
+using Bookstore.Infra.Data.Context.Mappings;
 using Microsoft.EntityFrameworkCore;
 
 namespace Bookstore.Infra.Data.Context
@@ -16,26 +17,7 @@ namespace Bookstore.Infra.Data.Context
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-           var model = modelBuilder.Entity<Book>();
-           model.HasKey(x => x.Id);
-
-           model.Property(x => x.Name)
-                .IsRequired()
-                .HasColumnName("Name")
-                .HasColumnType("NVARCHAR")
-                .HasMaxLength(80);
-            
-            model.Property(x => x.Description)
-                .IsRequired()
-                .HasColumnName("Description")
-                .HasColumnType("NVARCHAR")
-                .HasMaxLength(80);
-
-            model.Property(x => x.Price)
-            .IsRequired()
-                .HasColumnName("Price")
-                .HasColumnType("DECIMAL")
-                .HasMaxLength(80);
+            modelBuilder.ApplyConfiguration(new BookMap());
         }
     }
 }

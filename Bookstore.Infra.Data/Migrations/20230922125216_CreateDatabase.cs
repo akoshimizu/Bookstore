@@ -11,18 +11,18 @@ namespace Bookstore.Infra.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Books",
+                name: "Book",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "NVARCHAR(80)", maxLength: 80, nullable: false),
                     Description = table.Column<string>(type: "NVARCHAR(80)", maxLength: 80, nullable: false),
-                    Price = table.Column<decimal>(type: "DECIMAL(18,2)", maxLength: 80, nullable: false)
+                    Price = table.Column<decimal>(type: "DECIMAL(18,0)", maxLength: 80, nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Books", x => x.Id);
+                    table.PrimaryKey("PK_Book", x => x.Id);
                 });
         }
 
@@ -30,7 +30,7 @@ namespace Bookstore.Infra.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "Books");
+                name: "Book");
         }
     }
 }
