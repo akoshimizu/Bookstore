@@ -28,14 +28,14 @@ namespace Bookstore.Api.Controllers
         }
 
         [HttpPost("v1/books")]
-        public async Task<ActionResult> CreateBook([FromBody]BookResponseViewModel book)
+        public async Task<ActionResult> CreateBook([FromBody]EditorBookViewModel book)
         {
             var bookCreated = await _bookService.CreateBook(book);
             return Ok(bookCreated);
         }
 
         [HttpPut("v1/books/{id:int}")]
-        public async Task<ActionResult> UpdateBook([FromBody]BookResponseViewModel model, [FromRoute]int id)
+        public async Task<ActionResult> UpdateBook([FromBody]EditorBookViewModel model, [FromRoute]int id)
         {
             var Updatedbook = await _bookService.UpdateBook(model, id);
             if(Updatedbook is null) return StatusCode(204, "Livro não encontrado");

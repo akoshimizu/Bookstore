@@ -1,13 +1,8 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
 namespace Bookstore.Application.ViewModel.Book
 {
-    public class BookResponseViewModel
+    public class EditorBookViewModel
     {
-        public BookResponseViewModel(int? id, string name, string description, decimal price)
+        public EditorBookViewModel(int? id, string name, string description, decimal price)
         {
             Id = id;
             Name = name;

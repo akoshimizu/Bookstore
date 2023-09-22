@@ -1,4 +1,3 @@
-using System.Reflection.Metadata.Ecma335;
 using AutoMapper;
 using Bookstore.Application.Interfaces;
 using Bookstore.Application.ViewModel.Book;
@@ -20,7 +19,7 @@ namespace Bookstore.Application.Services
             _bookRepository = bookRepository;
         }
 
-        public async Task<IEnumerable<BookResponseViewModel>> GetAllBooks()
+        public async Task<IEnumerable<EditorBookViewModel>> GetAllBooks()
         {
             try
             {
@@ -32,29 +31,29 @@ namespace Bookstore.Application.Services
                 
                 return allBooks;
             }
-            catch (System.Exception)
+            catch (System.Exception ex)
             {
-                throw;
+                throw new Exception(ex.Message);
             }
         }
 
-        public async Task<BookResponseViewModel> GetBookByName(string bookName)
+        public async Task<EditorBookViewModel> GetBookByName(string bookName)
         {
-            return _mapper.Map<BookResponseViewModel>(await _bookRepository.GetBookByName(bookName));
+            return _mapper.Map<EditorBookViewModel>(await _bookRepository.GetBookByName(bookName));
         }
 
-        public async Task<BookResponseViewModel> CreateBook(BookResponseViewModel model)
+        public async Task<EditorBookViewModel> CreateBook(EditorBookViewModel model)
         {
             var book = await _bookRepository.CreateBook( _mapper.Map<Book>(model));
             
-            return _mapper.Map<BookResponseViewModel>(book);
+            return _mapper.Map<EditorBookViewModel>(book);
         }
 
-        public async Task<BookResponseViewModel> UpdateBook(BookResponseViewModel model, int id)
+        public async Task<EditorBookViewModel> UpdateBook(EditorBookViewModel model, int id)
         {
             var Updatedbook = _mapper.Map<Book>(model);
             Updatedbook = await _bookRepository.UpdateBook(Updatedbook, id);
-            return _mapper.Map<BookResponseViewModel>(Updatedbook);
+            return _mapper.Map<EditorBookViewModel>(Updatedbook);
         }
 
         public string DeleteBook(int id)
@@ -62,12 +61,12 @@ namespace Bookstore.Application.Services
             return _bookRepository.DeleteBook(id);
         }
 
-        private async Task<IEnumerable<BookResponseViewModel>> GetFirstTimeBooks()
+        private async Task<IEnumerable<EditorBookViewModel>> GetFirstTimeBooks()
         {
             var listBooks = await _bookRepository.GetAllBooks();
             if(listBooks is null) return null;
             
-            var books = _mapper.Map<IEnumerable<BookResponseViewModel>>(listBooks);
+            var books = _mapper.Map<IEnumerable<EditorBookViewModel>>(listBooks);
 
             return books;
         }

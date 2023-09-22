@@ -8,7 +8,7 @@ namespace Bookstore.Application.Services.Mappings
     {
         public BookProfile()
         {
-            CreateMap<Book, BookResponseViewModel>().ReverseMap();
+            CreateMap<Book, EditorBookViewModel>().ReverseMap();
         }
     }
 }
