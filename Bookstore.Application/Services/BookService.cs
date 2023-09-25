@@ -25,7 +25,7 @@ namespace Bookstore.Application.Services
             {
                 var allBooks = await _cache.GetOrCreateAsync("GetBooks", entry =>
                 {
-                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(10);
+                    entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(1);
                     return GetFirstTimeBooks();
                 });
                 
