@@ -25,6 +25,8 @@ builder.Services.AddSwaggerGen(c =>
             Email = "anderson_koshimizu@hotmail.com"
            }
         });
+        string xmlPath = Path.Combine("wwwroot", "api-doc.xml");
+        c.IncludeXmlComments(xmlPath);
     });
 
 var filterOptions = new HyperMediaFilterOptions();
