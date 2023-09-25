@@ -32,7 +32,7 @@ namespace Bookstore.Infra.Data.Migrations
 
                     b.Property<string>("Description")
                         .IsRequired()
-                        .HasMaxLength(80)
+                        .HasMaxLength(200)
                         .HasColumnType("NVARCHAR")
                         .HasColumnName("Description");
 
@@ -44,12 +44,43 @@ namespace Bookstore.Infra.Data.Migrations
 
                     b.Property<decimal>("Price")
                         .HasMaxLength(80)
+                        .HasPrecision(18, 2)
                         .HasColumnType("DECIMAL")
                         .HasColumnName("Price");
 
                     b.HasKey("Id");
 
                     b.ToTable("Book", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "O maior romance da Literatura Espanhola é um clássico satírico de alta qualidade crítica.",
+                            Name = "Dom Quixote",
+                            Price = 29.90m
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = " Um dos principais clássicos de fantasia do mundo.",
+                            Name = "O Senhor dos Anéis",
+                            Price = 49.90m
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Description = " Um dos maiores clássicos infantis foi escrito e ilustrado pelo autor Antoine de Saint-Exupéry quando se encontrava exilado na América do Norte durante a II Guerra Mundial.",
+                            Name = "O Pequeno Príncipe",
+                            Price = 19.90m
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Description = "Em Harry Potter e a Pedra Filosofal é apresentado Harry e todo o mundo fantástico a que ele pertence, assim como os perigos pelos quais o garoto está sujeito.",
+                            Name = "Harry Potter e a Pedra Filosofal",
+                            Price = 39.90m
+                        });
                 });
 #pragma warning restore 612, 618
         }

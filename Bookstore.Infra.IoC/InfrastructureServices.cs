@@ -18,6 +18,17 @@ namespace Bookstore.Infra.IoC
             services.AddDbContext<BookstoreDbContext>(options => 
                 options.UseSqlServer(connectionString, b => b.MigrationsAssembly(typeof(BookstoreDbContext).Assembly.FullName)));
 
+            using(var scope = services.BuildServiceProvider().CreateScope())
+            {
+                using(var dbContext = scope.ServiceProvider.GetRequiredService<BookstoreDbContext>())
+                {
+                    if (dbContext.Database.GetPendingMigrations().Any())
+                    {
+                        dbContext.Database.Migrate();
+                    }
+                }
+            }
+
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IBookRepository, BookRepository>();
             services.AddAutoMapper(typeof(BookProfile));

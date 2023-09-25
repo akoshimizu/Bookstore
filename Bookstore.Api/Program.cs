@@ -2,6 +2,7 @@ using Bookstore.Api.Hypermedia.Enricher;
 using Bookstore.Api.Hypermedia.Filters;
 using Bookstore.Api.ValueObject.Mapping;
 using Bookstore.Infra.IoC;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,20 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c => {c.EnableAnnotations();});
+builder.Services.AddSwaggerGen(c => 
+    {
+        c.EnableAnnotations();
+        c.SwaggerDoc("v1", new OpenApiInfo 
+        {
+           Version = "v1",
+           Title = "Book Registration",
+           Contact = new OpenApiContact
+           {
+            Name = "Anderson Alves Koshimizu",
+            Email = "anderson_koshimizu@hotmail.com"
+           }
+        });
+    });
 
 var filterOptions = new HyperMediaFilterOptions();
 filterOptions.ContentResponseEnricherList.Add(new BookEnricher());
