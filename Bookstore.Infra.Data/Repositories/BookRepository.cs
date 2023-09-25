@@ -27,6 +27,7 @@ namespace Bookstore.Infra.Data.Repositories
 
         public async Task<Book> CreateBook(Book newBook)
         {
+            newBook.Author = await _context.Authors.FirstOrDefaultAsync(x => x.Id == newBook.AuthorId);
             try
             {
                 await _context.Books.AddAsync(newBook);
@@ -59,7 +60,7 @@ namespace Bookstore.Infra.Data.Repositories
             var deletedBook = _context.Books.FirstOrDefault(x => x.Id.Equals(id));
             if(deletedBook is null) return null;
             
-            _context.Books.Remove(deletedBook); //VERIFY
+            _context.Books.Remove(deletedBook);
             _context.SaveChanges();
             return $"Deleted book: {deletedBook.Name}";
         }

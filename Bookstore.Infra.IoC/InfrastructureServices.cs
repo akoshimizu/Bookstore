@@ -31,7 +31,13 @@ namespace Bookstore.Infra.IoC
 
             services.AddScoped<IBookService, BookService>();
             services.AddScoped<IBookRepository, BookRepository>();
+            services.AddScoped<IAuthorService, AuthorService>();
+            services.AddScoped<IAuthorRepository, AuthorRepository>();
+
+
+
             services.AddAutoMapper(typeof(BookProfile));
+            services.AddAutoMapper(typeof(AuthorProfile));
             services.AddMemoryCache();
         }
     }

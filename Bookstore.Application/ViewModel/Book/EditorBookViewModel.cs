@@ -4,12 +4,13 @@ namespace Bookstore.Application.ViewModel.Book
 {
     public class EditorBookViewModel
     {
-        public EditorBookViewModel(int? id, string name, string description, decimal price)
+        public EditorBookViewModel(int? id, string name, string description, decimal price, int? authorId)
         {
             Id = id;
             Name = name;
             Description = description;
             Price = price;
+            AuthorId = authorId;
         }
         public int? Id { get; private set; }
         [Required]
@@ -23,5 +24,6 @@ namespace Bookstore.Application.ViewModel.Book
         [Required]
         [Range(0, 9999999999999999.99)]
         public decimal Price { get; private set; }
+        public int? AuthorId { get; private set;}
     }
 }

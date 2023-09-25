@@ -22,6 +22,42 @@ namespace Bookstore.Infra.Data.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("Bookstore.Domain.Entities.Author", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("NVARCHAR")
+                        .HasColumnName("Name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Author", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Miguel de Cervantes"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Antoine de Saint-Exupéry"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "J. K. Rowling"
+                        });
+                });
+
             modelBuilder.Entity("Bookstore.Domain.Entities.Book", b =>
                 {
                     b.Property<int?>("Id")
@@ -29,6 +65,9 @@ namespace Bookstore.Infra.Data.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int?>("Id"));
+
+                    b.Property<int?>("AuthorId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Description")
                         .IsRequired()
@@ -50,12 +89,15 @@ namespace Bookstore.Infra.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AuthorId");
+
                     b.ToTable("Book", (string)null);
 
                     b.HasData(
                         new
                         {
                             Id = 1,
+                            AuthorId = 1,
                             Description = "O maior romance da Literatura Espanhola é um clássico satírico de alta qualidade crítica.",
                             Name = "Dom Quixote",
                             Price = 29.90m
@@ -63,6 +105,7 @@ namespace Bookstore.Infra.Data.Migrations
                         new
                         {
                             Id = 2,
+                            AuthorId = 1,
                             Description = " Um dos principais clássicos de fantasia do mundo.",
                             Name = "O Senhor dos Anéis",
                             Price = 49.90m
@@ -70,6 +113,7 @@ namespace Bookstore.Infra.Data.Migrations
                         new
                         {
                             Id = 3,
+                            AuthorId = 2,
                             Description = " Um dos maiores clássicos infantis foi escrito e ilustrado pelo autor Antoine de Saint-Exupéry quando se encontrava exilado na América do Norte durante a II Guerra Mundial.",
                             Name = "O Pequeno Príncipe",
                             Price = 19.90m
@@ -77,10 +121,25 @@ namespace Bookstore.Infra.Data.Migrations
                         new
                         {
                             Id = 4,
+                            AuthorId = 3,
                             Description = "Em Harry Potter e a Pedra Filosofal é apresentado Harry e todo o mundo fantástico a que ele pertence, assim como os perigos pelos quais o garoto está sujeito.",
                             Name = "Harry Potter e a Pedra Filosofal",
                             Price = 39.90m
                         });
+                });
+
+            modelBuilder.Entity("Bookstore.Domain.Entities.Book", b =>
+                {
+                    b.HasOne("Bookstore.Domain.Entities.Author", "Author")
+                        .WithMany("Books")
+                        .HasForeignKey("AuthorId");
+
+                    b.Navigation("Author");
+                });
+
+            modelBuilder.Entity("Bookstore.Domain.Entities.Author", b =>
+                {
+                    b.Navigation("Books");
                 });
 #pragma warning restore 612, 618
         }
